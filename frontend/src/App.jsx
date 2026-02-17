@@ -10,12 +10,12 @@ import ProtectedRoute from './components/ProtectedRoute';
 /**
  * Placeholder components for Role-Based Dashboards
  */
-const StudentDashboard = () => (
-  <div className="p-12 text-center">
-    <h1 className="text-4xl font-extrabold text-primary-600 mb-4">Student Dashboard</h1>
-    <p className="text-xl text-gray-600 max-w-2xl mx-auto">Welcome to your learning portal.</p>
-  </div>
-);
+import StudentDashboard from './student/StudentDashboard';
+import PeerLearning from './student/PeerLearning';
+import Progress from './student/Progress';
+import Rewards from './student/Rewards';
+import Marketplace from './student/Marketplace';
+import Chatbot from './student/Chatbot';
 
 const TutorDashboard = () => (
   <div className="p-12 text-center">
@@ -39,12 +39,14 @@ function AppContent() {
   const location = useLocation();
 
   // Define pages where we hide the global Navbar/Footer
+  // Define pages where we hide the global Navbar/Footer
   const isAuthPage = ['/login', '/register'].includes(location.pathname);
+  const isStudentPage = location.pathname.startsWith('/student');
 
   // Note: Home.jsx already includes Navbar and Footer.
-  // To avoid duplication, we render the global Navbar/Footer only on routes that are NOT Home, Login, or Register.
+  // To avoid duplication, we render the global Navbar/Footer only on routes that are NOT Home, Login, Register, or Student Dashboard.
   const isHomePage = location.pathname === '/';
-  const shouldShowGlobalLayout = !isAuthPage && !isHomePage;
+  const shouldShowGlobalLayout = !isAuthPage && !isHomePage && !isStudentPage;
 
   return (
     <div className="flex flex-col min-h-screen font-sans bg-gray-50">
@@ -59,16 +61,44 @@ function AppContent() {
           <Route path="/register" element={<Register />} />
 
           {/* Protected Routes with Role Checks */}
+
+
+          // ... other imports
+
+          {/* Protected Routes with Role Checks */}
           <Route
-            path="/student/*"
+            path="/student"
             element={
               <ProtectedRoute allowedRoles={['student']}>
-                <Routes>
-                  <Route index element={<StudentDashboard />} />
-                </Routes>
+                <StudentDashboard />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="dashboard" element={
+              <div className="p-6">
+                <h2 className="text-2xl font-bold mb-4">Dashboard Overview</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h3 className="text-lg font-semibold text-gray-700 mb-2">Upcoming Deadlines</h3>
+                    <p className="text-gray-500">No pending assignments.</p>
+                  </div>
+                  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h3 className="text-lg font-semibold text-gray-700 mb-2">Recent Grades</h3>
+                    <p className="text-gray-500">GPA: 3.8</p>
+                  </div>
+                  <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <h3 className="text-lg font-semibold text-gray-700 mb-2">Active Kuppi Groups</h3>
+                    <p className="text-gray-500">2 active groups</p>
+                  </div>
+                </div>
+              </div>
+            } />
+            <Route path="peer-learning" element={<PeerLearning />} />
+            <Route path="progress" element={<Progress />} />
+            <Route path="rewards" element={<Rewards />} />
+            <Route path="marketplace" element={<Marketplace />} />
+            <Route path="chatbot" element={<Chatbot />} />
+          </Route>
 
           <Route
             path="/tutor/*"

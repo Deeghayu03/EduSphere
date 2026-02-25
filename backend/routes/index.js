@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 // Import routes
+// Import routes
+const authRoutes = require('./auth.routes');
 const userRoutes = require('./users.routes');
 const kuppiRoutes = require('./kuppi.routes');
 const engagementRoutes = require('./engagement.routes');
@@ -10,6 +12,8 @@ const chatbotRoutes = require('./chatbot.routes');
 const gradePredictorRoutes = require('./gradePredictor.routes');
 
 // Mount routes
+// Mount routes
+router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/kuppi', kuppiRoutes);
 router.use('/engagement', engagementRoutes);
